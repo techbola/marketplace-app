@@ -6,7 +6,23 @@ const store = createStore({
         user: {
             data: {},
             token: sessionStorage.getItem("TOKEN")
-        }
+        },
+        listings: [
+            {
+                id: 1,
+                title: 'Listing1',
+                slug: 'listing-1',
+                image: 'https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500',
+                description: 'Description about lisiting 1'
+            },
+            {
+                id: 2,
+                title: 'Listing2',
+                slug: 'listing-2',
+                image: 'https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500',
+                description: 'Description about lisiting 2'
+            }
+        ]
     },
     getters: {},
     actions: {

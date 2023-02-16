@@ -4,55 +4,67 @@ import AuthLayout from "../components/AuthLayout.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Dashboard from "../views/Dashboard.vue";
+import ListingCreate from "../views/ListingCreate.vue";
+import ListingView from "../views/ListingView.vue";
 import store from "../store";
 
 const routes = [
-    {
-        path: '/',
-        redirect: '/dashboard',
-        component: DefaultLayout,
-        meta: { requiresAuth: true },
-        children: [
-            {
-                path: '/dashboard',
-                name: 'Dashboard',
-                component: Dashboard
-            },
-        ]
-    },
-    {
-        path: '/auth',
-        redirect: '/login',
-        component: AuthLayout,
-        meta: { isGuest: true },
-        children: [
-            {
-                path: '/login',
-                name: 'Login',
-                component: Login
-            },
-            {
-                path: '/register',
-                name: 'Register',
-                component: Register
-            }
-        ]
-    },
+  {
+    path: "/",
+    redirect: "/dashboard",
+    component: DefaultLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "/dashboard",
+        name: "Dashboard",
+        component: Dashboard,
+      },
+      {
+        path: "/listing/create",
+        name: "ListingCreate",
+        component: ListingCreate,
+      },
+      {
+        path: "/listing/:id",
+        name: "ListingView",
+        component: ListingView,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    redirect: "/login",
+    component: AuthLayout,
+    meta: { isGuest: true },
+    children: [
+      {
+        path: "/login",
+        name: "Login",
+        component: Login,
+      },
+      {
+        path: "/register",
+        name: "Register",
+        component: Register,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
-})
+  history: createWebHistory(),
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !store.state.user.token) {
-        next({name: "Login"})
-    } else if (store.state.user.token && (to.meta.isGuest)) {
-        next({name: "Dashboard"})
-    } else {
-        next();
-    }
-})
+  if (to.meta.requiresAuth && !store.state.user.token) {
+    next({ name: "Login" });
+  } else if (store.state.user.token && to.meta.isGuest) {
+    next({ name: "Dashboard" });
+  } else {
+    next();
+  }
+});
 
 export default router;
