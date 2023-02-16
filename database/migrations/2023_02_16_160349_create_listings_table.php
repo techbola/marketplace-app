@@ -25,7 +25,7 @@ class CreateListingsTable extends Migration
             $table->string('currency');
             $table->string('mobile');
             $table->string('email');
-            $table->foreignIdFor(Category::class, 'category_id');
+            $table->string('category');
             $table->timestamps();
         });
     }
