@@ -72,7 +72,7 @@
 
 <script setup>
     import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-    import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+    import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
     import { useStore } from 'vuex'
     import { computed } from 'vue'
@@ -84,13 +84,16 @@
     const user = computed(() => store.state.user.data)
 
     function logout() {
-        store.commit('logout');
-        router.push({
-            name: 'Login'
-        })
+        store.dispatch('logout')
+            .then(() => {
+                router.push({
+                    name: 'Login'
+                })
+            });
     }
 
     const navigation = [
         { name: 'Dashboard', to: { name: 'Dashboard' } },
+        { name: 'Surveys', to: { name: 'Surveys' }},
     ]
 </script>
