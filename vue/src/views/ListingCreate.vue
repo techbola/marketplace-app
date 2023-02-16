@@ -1,7 +1,7 @@
 <template>
     <PageComponent title="Create a Listing">
         <form @submit.prevent="saveListing">
-            <ValidationErrors :errors="errorMsg" v-if="errorMsg" @clear-error="clearError" />
+            <ValidationErrors :errors="errorMsg" v-if="Object.keys(errorMsg).length > 0" @clear-error="clearError" />
 
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">

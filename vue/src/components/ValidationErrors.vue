@@ -13,7 +13,7 @@
 
 <script setup>
     import { computed } from "vue";
-    const props = defineProps(['errors']);
+    const props = defineProps(['errors'])
 
     const validationErrors = computed(() => {
         let errors = Object.values(props.errors);

@@ -9,7 +9,7 @@
         </p>
     </div>
     <form @submit="register" class="mt-8 space-y-6">
-        <ValidationErrors :errors="errorMsg" v-if="errorMsg" @clear-error="clearError" />
+        <ValidationErrors :errors="errorMsg" v-if="Object.keys(errorMsg).length > 0" @clear-error="clearError" />
 
         <input type="hidden" name="remember" value="true" />
         <div class="-space-y-px rounded-md shadow-sm">
