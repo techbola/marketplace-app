@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[170px]">
-        <h4 class="mt-4 text-lg font-bold">{{ listing.title }}</h4>
-        <div v-html="listing.description" class="overflow-hidden flex-1"></div>
+        <h4 class="mt-4 text-lg font-bold">{{ truncate(listing.title, 25) }}</h4>
+        <div v-html="truncate(listing.description, 60)" class="overflow-hidden flex-1"></div>
 
         <div class="mt-3">
             <router-link :to="{ name: 'ListingView', params: { id: listing.id } }"
@@ -12,6 +12,14 @@
 
 <script setup>
     const props = defineProps(['listing'])
+
+    function truncate(value, length) {
+        if (value.length > length) {
+            return value.substring(0, length) + "...";
+        } else {
+            return value;
+        }
+    }
 </script>
 
 <style lang="scss" scoped>

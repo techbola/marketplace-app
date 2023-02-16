@@ -45,7 +45,6 @@ class ListingController extends Controller
 
         $listing->title = $request->input('title');
         $listing->slug = Str::slug($request->input('title'), '-');
-        $request->input('title');
         $listing->description = $request->input('description');
         $listing->date_online = $request->input('date_online');
         $listing->date_offline = $request->input('date_offline');
