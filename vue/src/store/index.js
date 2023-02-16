@@ -7,41 +7,39 @@ const store = createStore({
       data: {},
       token: sessionStorage.getItem("TOKEN"),
     },
-    listings: [
-      {
-        id: 1,
-        title: "Listing1",
-        slug: "listing-1",
-        image:
-          "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500",
-        description: "Description about lisiting 1",
-        date_online: "2023-02-18",
-        date_offline: "2023-03-18",
-        price: "3000",
-        currency: "naira",
-        mobile: "12345678",
-        email: "listing1@test.com",
-        category: "Cars",
-      },
-      {
-        id: 2,
-        title: "Listing2",
-        slug: "listing-2",
-        image:
-          "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500",
-        description: "Description about lisiting 2",
-        date_online: "2023-02-18",
-        date_offline: "2023-03-18",
-        price: "5000",
-        currency: "rand",
-        mobile: "12345678",
-        email: "listing2@test.com",
-        category: "Property",
-      },
-    ],
+    listings: [],
   },
-  getters: {},
+  getters: {
+    allListings: function (state) {
+      return state.listings;
+    },
+  },
   actions: {
+    searchListing({ commit }, searchData) {
+      return axiosClient
+        .get("/listings", {
+          params: {
+            category: searchData.category,
+            search_query: searchData.search_query,
+          },
+        })
+        .then(({ data }) => {
+          commit("getListings", data);
+          return data;
+        });
+    },
+    getAllListing({ commit }) {
+      return axiosClient.get("/listings").then(({ data }) => {
+        commit("getListings", data);
+        return data;
+      });
+    },
+    createListing({ commit }, listing) {
+      return axiosClient.post("/listings", listing).then(({ data }) => {
+        commit("createListing", data);
+        return data;
+      });
+    },
     register({ commit }, user) {
       return axiosClient.post("/register", user).then(({ data }) => {
         commit("setUser", data);
@@ -71,6 +69,12 @@ const store = createStore({
       state.user.token = userData.token;
       state.user.data = userData.user;
       sessionStorage.setItem("TOKEN", userData.token);
+    },
+    createListing: (state, data) => {
+      state.listings.push(data.listing);
+    },
+    getListings: (state, data) => {
+      state.listings = data;
     },
   },
   modules: {},
