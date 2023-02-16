@@ -9,11 +9,13 @@
         </p>
     </div>
     <form @submit="register" class="mt-8 space-y-6">
+        <ValidationErrors :errors="errorMsg" v-if="errorMsg" @clear-error="clearError" />
+
         <input type="hidden" name="remember" value="true" />
         <div class="-space-y-px rounded-md shadow-sm">
             <div>
                 <label for="full-name" class="sr-only">Fullname</label>
-                <input id="full-name" name="name" type="text" autocomplete="name" v-model="user.name" required="" class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Full name" />
+                <input id="full-name" name="name" type="text" autocomplete="name" required v-model="user.name" class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Full name" />
             </div>
             <div>
                 <label for="email-address" class="sr-only">Email address</label>
@@ -40,6 +42,8 @@
 <script setup>
     import store from "../store";
     import { useRouter } from "vue-router";
+    import { ref } from "vue";
+    import ValidationErrors from "../components/ValidationErrors.vue";
 
     const router = useRouter();
 
@@ -50,13 +54,28 @@
         password_confirmation: '',
     }
 
+    let errorMsg = ref([]);
+
     function register(ev) {
         ev.preventDefault();
         store
             .dispatch('register', user)
-            .then(() => { router.push({
-                name: 'Dashboard'
-            })})
+            .then(() => { 
+                router.push({
+                    name: 'Dashboard'
+                })
+            })
+            .catch((error) => {
+                if (error.response.status == 422){
+                    errorMsg.value = error.response.data.errors
+                } else {
+                    errorMsg.value.push("Something went wrong!");
+                }
+            })
+    }
+
+    function clearError() {
+        errorMsg.value = ''
     }
 </script>
 

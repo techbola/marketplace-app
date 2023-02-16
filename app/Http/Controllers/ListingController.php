@@ -34,7 +34,7 @@ class ListingController extends Controller
             'description' => 'required|string',
             'date_online' => 'required',
             'date_offline' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric',
             'currency' => 'required',
             'mobile' => 'required',
             'email' => 'required|email|string',

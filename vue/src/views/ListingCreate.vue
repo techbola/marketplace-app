@@ -1,13 +1,15 @@
 <template>
     <PageComponent title="Create a Listing">
         <form @submit.prevent="saveListing">
+            <ValidationErrors :errors="errorMsg" v-if="errorMsg" @clear-error="clearError" />
+
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-3">
                             <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                            <input type="text" name="title" id="title" v-model="listing.title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            <input type="text" name="title" id="title" v-model="listing.title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                         </div>
 
                         <div class="col-span-6">
@@ -77,6 +79,7 @@
     import { ref } from "vue";
     import store from '../store';
     import { useRouter } from "vue-router";
+    import ValidationErrors from "../components/ValidationErrors.vue";
 
     const router = useRouter();
 
@@ -92,6 +95,8 @@
         category: ''
     });
 
+    let errorMsg = ref([]);
+
     function saveListing(ev) {
         ev.preventDefault();
         store
@@ -102,6 +107,17 @@
                     params: { id: data.listing.id }
                 })
             })
+            .catch((error) => {
+                if (error.response.status == 422){
+                    errorMsg.value = error.response.data.errors
+                } else {
+                    errorMsg.value.push("Something went wrong!");
+                }
+            })
+    }
+
+    function clearError() {
+        errorMsg.value = ''
     }
 </script>
 

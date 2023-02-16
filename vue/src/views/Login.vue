@@ -9,14 +9,7 @@
         </p>
     </div>
     <form @submit="login" class="mt-8 space-y-6">
-        <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
-            {{  errorMsg }}
-            <span @click="errorMsg = ''" class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </span>
-        </div>
+        <ValidationErrors :errors="errorMsg" v-if="errorMsg" @clear-error="clearError" />
         
         <input type="hidden" name="remember" value="true" />
         <div class="-space-y-px rounded-md shadow-sm">
@@ -52,7 +45,8 @@
 <script setup>
     import store from "../store";
     import { useRouter } from "vue-router";
-    import { ref } from "vue"
+    import { ref } from "vue";
+    import ValidationErrors from "../components/ValidationErrors.vue";
 
     const router = useRouter();
 
@@ -62,7 +56,7 @@
         remember: false
     }
 
-    let errorMsg = ref('');
+    let errorMsg = ref([]);
 
     function login(ev) {
         ev.preventDefault();
@@ -73,8 +67,16 @@
                 })
             })
             .catch((error) => {
-                errorMsg.value = error.response.data.error
+                if (error.response.status == 422){
+                    errorMsg.value = error.response.data.errors
+                } else {
+                    errorMsg.value.push("Something went wrong!");
+                }
             })
+    }
+
+    function clearError() {
+        errorMsg.value = ''
     }
 </script>
 
